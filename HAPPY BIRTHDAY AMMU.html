@@ -1,0 +1,169 @@
+```html
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ammu's Birthday Surprise</title>
+<style>
+body { font-family: 'Arial', cursive; text-align: center; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%); margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; }
+.page { display: none; padding: 20px; height: 100vh; width: 100%; box-sizing: border-box; flex-direction: column; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.85); border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.active { display: flex; }
+h1 { color: #d63031; font-size: 3rem; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+p { font-size: 1.5rem; color: #2d3436; margin: 15px 0; }
+.decoration { font-size: 4rem; margin: 10px; animation: heartbeat 1.5s infinite; }
+@keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+img { max-width: 200px; max-height: 200px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin: 10px; border: 5px solid white; object-fit: cover; }
+video { max-width: 350px; max-height: 350px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin: 20px; border: 5px solid white; }
+button { padding: 15px 35px; font-size: 1.5rem; background-color: #ff4757; color: white; border: none; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; margin: 15px; box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4); font-weight: bold; }
+button:hover { background-color: #ff6b81; transform: scale(1.08); }
+#no-btn { position: absolute; }
+#countdown { font-size: 3rem; color: #d63031; font-weight: bold; margin: 20px; background: white; padding: 20px 30px; border-radius: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+.game-area { width: 300px; height: 300px; border: 3px dashed #ff4757; margin: 20px; position: relative; border-radius: 20px; background: white; overflow: hidden; }
+.box { width: 60px; height: 60px; background-color: #ffcc00; position: absolute; cursor: pointer; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 2rem; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.1s ease; }
+.tutorial { font-size: 1.2rem; color: #636e72; font-style: italic; margin-bottom: 10px; }
+.gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px; }
+</style>
+</head>
+<body>
+<audio id="bg-music" loop>
+<source src="happy-birthday-tune.mpeg" type="audio/mpeg">
+</audio>
+<div id="page1" class="page active">
+<div class="decoration">🎂🎈🧸</div>
+<h1>Counting down...</h1>
+<div id="countdown">Loading...</div>
+</div>
+<div id="page2" class="page">
+<div class="decoration">🧸🎁🎉</div>
+<h1>Hello Ammu 😉!</h1>
+<p>Are you ready for your birthday surprise?</p>
+<button onclick="startExperience()">Click Here!</button>
+</div>
+<div id="page3" class="page">
+<h1>Are you ready for the best birthday ever?</h1>
+<div>
+<button onclick="nextPage(4)">Yes</button>
+<button id="no-btn" onmouseover="moveNoButton()">No</button>
+</div>
+</div>
+<div id="page4" class="page">
+<h1>Catch the Gift!</h1>
+<div class="tutorial">Tutorial: Click the gift box 5 times before it opens!</div>
+<div class="game-area">
+<div class="box" id="gift" onclick="clickGift()">🎁</div>
+</div>
+</div>
+<div id="page5" class="page">
+<div class="decoration">✨🌸</div>
+<h1>Here are some beautiful memories!</h1>
+<div class="gallery">
+<img src="1.jpeg" alt="Photo 1">
+<img src="2.jpeg" alt="Photo 2">
+<img src="3.jpeg" alt="Photo 3">
+</div>
+<button onclick="nextPage(6)">Next ➡️</button>
+</div>
+<div id="page6" class="page">
+<div class="decoration">🍰💖</div>
+<h1>You are awesome!</h1>
+<video id="birthday-video" controls onplay="pauseMusic()" onpause="playMusic()">
+<source src="v1.mp4" type="video/mp4">
+</video>
+<button onclick="nextPage(7)">Next ➡️</button>
+</div>
+<div id="page7" class="page">
+<h1>Pop the Balloons!</h1>
+<div class="tutorial">Tutorial: Click the balloon 3 times to burst it!</div>
+<div class="game-area">
+<div class="box" id="balloon" onclick="clickBalloon()">🎈</div>
+</div>
+</div>
+<div id="page8" class="page">
+<div class="decoration">🎁✨</div>
+<h1>A small gift for you!</h1>
+<div class="gallery">
+<img src="power bank 1.jpeg" alt="Gift Photo 1">
+<img src="power bank 3.jpeg" alt="Gift Photo 2">
+</div>
+<button onclick="nextPage(9)">Next ➡️</button>
+</div>
+<div id="page9" class="page">
+<div class="decoration">🎉🎂🧸✨</div>
+<h1>Happy Birthday Dear Ammu!</h1>
+<p>Wishing you the happiest day ever filled with love and joy! 💖</p>
+<button onclick="restart()">Start Again 🔄</button>
+</div>
+<script>
+const birthdayDate = new Date("2026-10-09T10:45:00+05:30").getTime();
+const music = document.getElementById('bg-music');
+const video = document.getElementById('birthday-video');
+const timerInterval = setInterval(function() {
+const now = new Date().getTime();
+const distance = birthdayDate - now;
+const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+if (distance < 0) {
+clearInterval(timerInterval);
+nextPage(2);
+}
+}, 1000);
+function startExperience() {
+music.play();
+nextPage(3);
+}
+function pauseMusic() {
+music.pause();
+}
+function playMusic() {
+if (video.paused) {
+music.play();
+}
+}
+function nextPage(num) {
+document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+document.getElementById('page' + num).classList.add('active');
+if (num === 6) {
+music.pause();
+}
+}
+function moveNoButton() {
+const btn = document.getElementById('no-btn');
+btn.style.left = Math.random() * (window.innerWidth - 120) + 'px';
+btn.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+}
+function restart() {
+video.load();
+nextPage(2);
+}
+function moveElement(element) {
+const x = Math.random() * 240;
+const y = Math.random() * 240;
+element.style.left = x + 'px';
+element.style.top = y + 'px';
+}
+let giftClicks = 0;
+function clickGift() {
+giftClicks++;
+if (giftClicks >= 5) {
+nextPage(5);
+} else {
+moveElement(document.getElementById('gift'));
+}
+}
+let balloonClicks = 0;
+function clickBalloon() {
+balloonClicks++;
+if (balloonClicks >= 3) {
+nextPage(8);
+} else {
+moveElement(document.getElementById('balloon'));
+}
+}
+</script>
+</body>
+</html>
+
